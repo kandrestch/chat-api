@@ -1,0 +1,105 @@
+npm init -y
+
+/----------------TYPE SCRIPT-------------------
+npm install typescript -D
+npx tsc --init
+npm install ts-node-dev --save-dev
+
+descomentar en tsconfig.json:
+"rootDir": "./src", 
+"outDir": "./dist",
+
+en package.json:
+"scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+    "dev": "ts-node-dev --respawn src/index.ts",
+},
+
+npm run dev
+npm run build
+npm start
+/-------------dependencies--------------------------------
+npm i express morgan cors bcrypt jsonwebtoken dotenv
+npm i @types/express @types/morgan @types/cors @types/bcrypt @types/jsonwebtoken -D
+
+npm i express ejs
+npm i @types/express @types/ejs -D
+
+--------------typeORM------------------------
+npm install typeorm reflect-metadata sqlite3
+npm install @types/node -D
+
+en tsconfig.json:
+"strictPropertyInitialization": false, 
+"experimentalDecorators": true,
+"emitDecoratorMetadata": true,
+
+en el acrivo principal "src/index.ts" poner primero:
+import "reflect-metadata"
+
+=============================================================================================================
+
+--------src/config/data-source.ts--------
+import { DataSource } from 'typeorm';
+
+export const AppDataSource = new DataSource({
+  type: 'sqlite',
+  database: './data.db',
+  entities: [
+    
+  ],
+  synchronize: true,
+  logging: false,
+});
+--------------src/app.ts-------------------
+import express from 'express';
+import morgan from 'morgan';
+import cors from 'cors';
+import routes from './routes';
+
+const app=express();
+
+// Middlewares
+app.use(morgan('dev'));
+app.use(express.json());
+
+// Static files
+app.use(express.static('public'));
+
+// Cors configuration
+app.use(cors(
+    {
+        origin: 'http://localhost:4200',
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Range', 'Accept', 'X-Requested-With'],
+        exposedHeaders: ['Content-Range', 'Accept-Ranges', 'Content-Length', 'Content-Type'],
+        credentials: true
+    }
+));
+
+// routes
+app.use('/api',routes);
+
+export default app;
+-------------src/index.ts-----------------
+import "reflect-metadata";
+import dotenv from 'dotenv';
+dotenv.config();
+
+import {AppDataSource} from './config/data-source';
+import app from './app';
+
+const PORT = process.env.PORT || 3000;
+
+async function main(){
+    try{
+        AppDataSource.initialize();
+        app.listen(PORT,()=>{
+            console.log(`Server is running at: \x1b[4mhttp://localhost:${PORT}\x1b[0m`);
+        });
+    }catch(error){
+        console.error(error)
+    }
+}
+main();
