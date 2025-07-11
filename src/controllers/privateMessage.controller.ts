@@ -7,7 +7,7 @@ export const PrivateMessageController = {
         res.json(items);
     },
 
-    getOne: async (req: Request, res: Response) => {
+    getById: async (req: Request, res: Response) => {
         const item = await service.findById(+req.params.id);
         if (item) res.json(item);
         else res.status(404).json({ message: "Not found" });
@@ -34,5 +34,20 @@ export const PrivateMessageController = {
         } catch (err: any) {
             res.status(404).json({ message: err.message || "Delete failed" });
         }
-    }
+    },
+
+    getByUserIds: async (req: Request, res: Response) => {
+        //const { id1, id2 } = req.params;
+        const id1=parseInt(req.params.id1);
+        const id2=parseInt(req.params.id2);
+        console.log("//-------------------"+id1);
+        
+        const items = await service.findByUserIds(id1, id2);
+        res.json(items);
+    },
+    getByUsernames: async (req: Request, res: Response) => {
+        const { username1, username2 } = req.params;
+        const items = await service.findByUsernames(username1, username2);
+        res.json(items);
+    },
 };

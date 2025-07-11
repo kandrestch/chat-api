@@ -7,7 +7,7 @@ export const FriendRequestStatusController = {
         res.json(items);
     },
 
-    getOne: async (req: Request, res: Response) => {
+    getById: async (req: Request, res: Response) => {
         const item = await service.findById(+req.params.id);
         if (item) res.json(item);
         else res.status(404).json({ message: "Not found" });

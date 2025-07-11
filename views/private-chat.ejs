@@ -1,0 +1,12 @@
+<div class="chat">
+    <div id="messages"></div>
+    <form id="message_form">
+        <input type="text" id="message_input" autocomplete="off" placeholder="Escribe un mensaje">
+        <button type="submit">
+            <img src="/icons/paper-plane.svg" alt="">
+        </button>
+    </form>
+</div>
+
+<script>const receiver_username="<%=receiver_username%>";</script>
+<script type="module" src="/js/private-chat.js"></script>

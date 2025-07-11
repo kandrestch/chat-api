@@ -8,6 +8,9 @@ export class Chat extends BaseEntity {
     @Column()
     name: string;
 
+    @Column({ default: '' })
+    image_url: string;
+
     @ManyToOne(() => User, { eager: true })
     @JoinColumn({ name: 'admin_id' })
     admin:User;

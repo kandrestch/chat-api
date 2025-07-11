@@ -16,7 +16,7 @@ export class User extends BaseEntity {
     @Column()
     password: string;
 
-    @Column({ nullable: true })
+    @Column({ default: '' })
     profile_picture_url: string;
 
     @Column({ type: 'date', nullable: true })

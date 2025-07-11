@@ -8,6 +8,8 @@ export const ChatService = {
 
     findById: (id: number) => repository.findOneBy({ id }),
 
+    findByName: (name: string) => repository.findOneBy({ name }),
+
     create: (data: Partial<Chat>) => {
         const user = repository.create(data);
         return repository.save(user);
@@ -19,4 +21,20 @@ export const ChatService = {
     },
 
     delete: (id: number) => repository.delete(id),
+
+    findByUserId: async (userId: number) => {
+        const list = await repository.find();
+
+        return list.filter(chat =>
+            chat.users.some(user => user.id === userId) || chat.admin?.id === userId
+        );
+    },
+
+    findByUsername: async (username: string) => {
+        const list = await repository.find();
+
+        return list.filter(chat =>
+            chat.users.some(user => user.username === username) || chat.admin?.username === username
+        );
+    }
 };

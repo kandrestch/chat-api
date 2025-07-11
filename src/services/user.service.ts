@@ -8,6 +8,8 @@ export const UserService = {
 
     findById: (id: number) => repository.findOneBy({ id }),
 
+    findByUsername: (username: string) => repository.findOneBy({ username }),
+
     create: (data: Partial<User>) => {
         const user = repository.create(data);
         return repository.save(user);

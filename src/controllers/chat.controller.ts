@@ -7,8 +7,15 @@ export const ChatController = {
         res.json(items);
     },
 
-    getOne: async (req: Request, res: Response) => {
+    getById: async (req: Request, res: Response) => {
         const item = await service.findById(+req.params.id);
+        if (item) res.json(item);
+        else res.status(404).json({ message: "Not found" });
+    },
+
+    getByName: async (req: Request, res: Response) => {
+        const name = req.params.name;
+        const item = await service.findByName(name);
         if (item) res.json(item);
         else res.status(404).json({ message: "Not found" });
     },
@@ -34,5 +41,15 @@ export const ChatController = {
         } catch (err: any) {
             res.status(404).json({ message: err.message || "Delete failed" });
         }
-    }
+    },
+
+    getByUserId: async (req: Request, res: Response) => {
+        const items = await service.findByUserId(+req.params.id);
+        res.json(items);
+    },
+    getByUsername: async (req: Request, res: Response) => {
+        const username= req.params.name;
+        const items = await service.findByUsername(username);
+        res.json(items);
+    },
 };

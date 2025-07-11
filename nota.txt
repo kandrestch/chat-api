@@ -24,7 +24,9 @@ npm i express morgan cors bcrypt jsonwebtoken dotenv
 npm i @types/express @types/morgan @types/cors @types/bcrypt @types/jsonwebtoken -D
 
 npm i express ejs
-npm i @types/express @types/ejs -D
+
+npm install ejs express-ejs-layouts
+npm install -D @types/express-ejs-layouts
 
 --------------typeORM------------------------
 npm install typeorm reflect-metadata sqlite3

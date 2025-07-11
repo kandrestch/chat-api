@@ -19,4 +19,15 @@ export const ChatMessageService = {
     },
 
     delete: (id: number) => repository.delete(id),
+
+    findByChatId: (id: number) => repository.find({
+      where: [
+        { chat: { id: id } }
+      ]
+    }),
+    findByChatName: (name: string) => repository.find({
+      where: [
+        { chat: { name: name } }
+      ]
+    }),
 };

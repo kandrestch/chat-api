@@ -9,8 +9,9 @@ export const PrivateMessageService = {
     findById: (id: number) => repository.findOneBy({ id }),
 
     create: (data: Partial<PrivateMessage>) => {
-        const user = repository.create(data);
-        return repository.save(user);
+        const { id, ...rest } = data;
+        const item = repository.create(rest);
+        return repository.save(item);
     },
 
     update: async (id: number, data: Partial<PrivateMessage>) => {
@@ -19,4 +20,18 @@ export const PrivateMessageService = {
     },
 
     delete: (id: number) => repository.delete(id),
+
+    findByUserIds: (id1: number, id2: number) => repository.find({
+        where: [
+            { sender: { id: id1 }, receiver: { id: id2 } },
+            { sender: { id: id2 }, receiver: { id: id1 } },
+        ]
+    }),
+
+    findByUsernames: (username1: string, username2: string) => repository.find({
+        where: [
+            { sender: { username: username1 }, receiver: { username: username2 } },
+            { sender: { username: username2 }, receiver: { username: username1 } },
+        ]
+    }),
 };

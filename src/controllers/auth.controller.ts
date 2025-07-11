@@ -3,9 +3,7 @@ import { User } from '../models/user.entity';
 import bcrypt from 'bcrypt';
 import {generateToken} from '../utils/jwt';
 
-export const register = async (req: Request, res: Response): Promise<void>  => {
-    console.log("dwwddw");
-    
+export const register = async (req: Request, res: Response): Promise<void>  => {    
     try {
         const { id, username, password, ...rest } = req.body;
 
@@ -42,11 +40,28 @@ export const login = async (req: Request, res: Response): Promise<void>  => {
     if (!isValid) {res.status(401).json({ message: "Password is invalid" });return;}
 
     const token = generateToken({sub:user.id,username:username});
-    res.set('Authorization', `Bearer ${token}`).json({ id: user.id, username, jwt: token });
+
+    //res.set('Authorization', `Bearer ${token}`)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Solo en HTTPS en producción
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000, // 1 día
+    })
+    .json({ id: user.id, username, jwt: token });
   } catch (error: any) {
     res.status(500).json({ message: "Internal server error" }); 
     return;
   }
+};
+
+export const logout = (req: Request, res: Response): void => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logout successful" });
 };
 
 export const me = async (req: Request, res: Response): Promise<void>  => {
